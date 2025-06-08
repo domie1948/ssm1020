@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yjkj.framework.rbac.book.dao.BookDao">
+	<resultMap type="com.yjkj.framework.rbac.book.model.Book" id="bookMap">
+	<association property="business" column="b_id" javaType="com.yjkj.framework.rbac.business.model.Business" select="com.yjkj.framework.rbac.business.dao.BusinessDao.informationLoadOne"></association>
+	</resultMap>
+	<select id="informationLoad" parameterType="java.util.HashMap"
+		resultMap="bookMap">
+		SELECT
+		*
+		FROM
+		book 
+		<where>
+			is_delete = '0'
+			<if test="book.searchName != null and book.searchName != ''">
+				AND CONCAT(name,language,price) LIKE CONCAT(CONCAT('%', #{book.searchName}), '%')
+				OR b_id IN(SELECT id FROM business WHERE name LIKE CONCAT(CONCAT('%', #{book.searchName}), '%'))
+			</if>
+		</where>
+		ORDER BY
+		id
+		DESC
+		LIMIT
+		#{pager.offSet},#{pager.pageSize}
+	</select>
+	<select id="informationLoadAll"
+		resultMap="bookMap">
+		SELECT
+		*
+		FROM
+		book 
+		<where>
+			is_delete = '0'
+		</where>
+		ORDER BY
+		id
+		DESC
+	</select>
+	<select id="count" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		book
+		<where>
+			is_delete = '0'
+			<if test="searchName != null and searchName != ''">
+				AND CONCAT(name,language,price) LIKE CONCAT(CONCAT('%', #{searchName}), '%')
+				OR b_id IN(SELECT id FROM business WHERE name LIKE CONCAT(CONCAT('%', #{searchName}), '%'))
+			</if>
+		</where>
+	</select>
+	<select id="informationLoadOne"  resultMap="bookMap">
+		SELECT
+		*
+		FROM
+		book
+		WHERE
+		id=#{id}
+	</select>
+
+
+	<delete id="informationDelete" >
+		UPDATE
+		book
+		SET
+		is_delete = '1'
+		WHERE id=#{id}
+	</delete>
+
+
+	<insert id="informationAdd" parameterType="com.yjkj.framework.rbac.book.model.Book">
+		INSERT INTO
+		book
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="num != null">
+				num,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="b_id != null">
+				b_id,
+			</if>
+			<if test="createtime != null">
+				createtime,
+			</if>
+			<if test="is_delete != null">
+				is_delete,
+			</if>
+			<if test="flag != null">
+				flag,
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="num != null">
+				#{num},
+			</if>
+			<if test="language != null">
+				#{language},
+			</if>
+			<if test="price != null">
+				#{price},
+			</if>
+			<if test="b_id != null">
+				#{b_id},
+			</if>
+			<if test="createtime != null">
+				#{createtime},
+			</if>
+			<if test="is_delete != null">
+				#{is_delete},
+			</if>
+			<if test="flag != null">
+				#{flag},
+			</if>
+		</trim>
+	</insert>
+	<update id="informationUpdate" parameterType="com.yjkj.framework.rbac.book.model.Book">
+		UPDATE
+		book
+		<set>
+			<if test="name != null">
+				name=#{name},
+			</if>
+			<if test="num != null">
+				num=#{num},
+			</if>
+			<if test="language != null">
+				language=#{language},
+			</if>
+			<if test="price != null">
+				price=#{price},
+			</if>
+			<if test="b_id != null">
+				b_id=#{b_id},
+			</if>
+			<if test="createtime != null">
+				createtime=#{createtime},
+			</if>
+			<if test="is_delete != null">
+				is_delete=#{is_delete},
+			</if>
+			<if test="flag != null">
+				flag=#{flag},
+			</if>
+		</set>
+		WHERE id=#{id}
+	</update>
+</mapper>

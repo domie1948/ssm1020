@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yjkj.framework.rbac.factory.dao.FactoryDao">
+	<resultMap type="com.yjkj.framework.rbac.factory.model.Factory" id="factoryMap">
+	<association property="book" column="book_id" javaType="com.yjkj.framework.rbac.book.model.Book" select="com.yjkj.framework.rbac.book.dao.BookDao.informationLoadOne"></association>
+	</resultMap>
+	<select id="informationLoad" parameterType="java.util.HashMap"
+		resultMap="factoryMap">
+		SELECT
+		*
+		FROM
+		factory 
+		<where>
+			is_delete = '0'
+		</where>
+		ORDER BY
+		id
+		DESC
+		LIMIT
+		#{pager.offSet},#{pager.pageSize}
+	</select>
+	<select id="informationLoadAll"
+		resultMap="factoryMap">
+		SELECT
+		*
+		FROM
+		factory 
+		<where>
+			is_delete = '0'
+		</where>
+		ORDER BY
+		id
+		DESC
+	</select>
+	<select id="count" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		factory
+		<where>
+			is_delete = '0'
+		</where>
+	</select>
+	<select id="informationLoadOne"  resultMap="factoryMap">
+		SELECT
+		*
+		FROM
+		factory
+		WHERE
+		id=#{id}
+	</select>
+
+
+	<delete id="informationDelete" >
+		UPDATE
+		factory
+		SET
+		is_delete = '1'
+		WHERE id=#{id}
+	</delete>
+
+
+	<insert id="informationAdd" parameterType="com.yjkj.framework.rbac.factory.model.Factory">
+		INSERT INTO
+		factory
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="book_id != null">
+				book_id,
+			</if>
+			<if test="num != null">
+				num,
+			</if>
+			<if test="typee != null">
+				typee,
+			</if>
+			<if test="createtime != null">
+				createtime,
+			</if>
+			<if test="is_delete != null">
+				is_delete,
+			</if>
+			<if test="flag != null">
+				flag,
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="book_id != null">
+				#{book_id},
+			</if>
+			<if test="num != null">
+				#{num},
+			</if>
+			<if test="typee != null">
+				#{typee},
+			</if>
+			<if test="createtime != null">
+				#{createtime},
+			</if>
+			<if test="is_delete != null">
+				#{is_delete},
+			</if>
+			<if test="flag != null">
+				#{flag},
+			</if>
+		</trim>
+	</insert>
+	<update id="informationUpdate" parameterType="com.yjkj.framework.rbac.factory.model.Factory">
+		UPDATE
+		factory
+		<set>
+			<if test="book_id != null">
+				book_id=#{book_id},
+			</if>
+			<if test="num != null">
+				num=#{num},
+			</if>
+			<if test="typee != null">
+				typee=#{typee},
+			</if>
+			<if test="createtime != null">
+				createtime=#{createtime},
+			</if>
+			<if test="is_delete != null">
+				is_delete=#{is_delete},
+			</if>
+			<if test="flag != null">
+				flag=#{flag},
+			</if>
+		</set>
+		WHERE id=#{id}
+	</update>
+</mapper>
